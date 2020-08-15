@@ -10,9 +10,20 @@ set(EventCpp "${CMAKE_CURRENT_SOURCE_DIR}/Event/Action.cpp"
              "${CMAKE_CURRENT_SOURCE_DIR}/Event/ActionTarget.cpp")
 
 add_library(Resource Resources/ResourceManager.hpp
-                     Resources/ResourceManager.cpp
-                     Resources/ResourceManager.tpl)
+                     Resources/ResourceManager.tpl
+                     Resources/ResourceHolder.hpp
+                     Resources/ResourceHolder.cpp
+                     )
+                     
+add_library(Entities Entity/Entity.hpp
+                   Entity/Player.hpp
+                   Entity/Player.cpp)
+
+
+
+
+target_link_libraries(Entities Resource Event)
 
 target_include_directories(Event PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(Resource PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-
+target_include_directories(Entities PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

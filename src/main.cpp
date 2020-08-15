@@ -2,10 +2,11 @@
 #include <Event/Action.hpp>
 #include <Event/ActionMap.hpp>
 #include <Event/ActionTarget.hpp>
-#include <Resources/ResourceManager.hpp>
+#include <Resources/ResourceHolder.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+#include <Entity/Player.hpp>
 
 enum KeyCode{
     Top, Down ,Left ,Right
@@ -15,18 +16,26 @@ int main(){
 
     sf::RenderWindow window{sf::VideoMode(800,600),"My window"};
     sf::RectangleShape rect;
-    rect.setSize(sf::Vector2f(100,100));
+    
+    gameResources::ResourceHolder::get().texture.load(1,"assets/sdds.png");
+
+    Player::setDefaultMovements();
+    Player player(sf::Vector2f(100,100),sf::Vector2f(100,100),1,false);
+    
+
+   // Player player();
+   /*  rect.setSize(sf::Vector2f(100,100));
     sf::Vector2f pos(100,100);
-    rect.setPosition(pos);
+    rect.setPosition(pos); */
     
     
 
 
 
-    ActionMap<int> keymap;
-    Action act(sf::Keyboard::S);
+    /* ActionMap<int> keymap;
+    Action act(sf::Keyboard::S); */
     
-    
+   /*  
     keymap.map(KeyCode::Top,Action(sf::Keyboard::W));
     keymap.map(KeyCode::Down,Action(sf::Keyboard::S));
     keymap.map(KeyCode::Right,Action(sf::Keyboard::D));
@@ -37,7 +46,7 @@ int main(){
     target.bind(KeyCode::Down,[&pos](const sf::Event&){pos.y+=.1f;});
     target.bind(KeyCode::Top,[&pos](const sf::Event&){pos.y-=.1f;});
     target.bind(KeyCode::Left,[&pos](const sf::Event&){pos.x-=.1f;});
-    target.bind(KeyCode::Right,[&pos](const sf::Event&){pos.x+=.1f;});
+    target.bind(KeyCode::Right,[&pos](const sf::Event&){pos.x+=.1f;}); */
     
     
     while(window.isOpen()){
@@ -47,11 +56,13 @@ int main(){
                 window.close();
             }
         }
-        rect.setPosition(pos);
-        target.processEvents();
-
+     /*    rect.setPosition(pos);
+        target.processEvents(); */
+        player.processEvent();
+        player.update();
         window.clear();
-        window.draw(rect);
+        //window.draw(rect);
+        window.draw(player);
         window.display();
 
     }
