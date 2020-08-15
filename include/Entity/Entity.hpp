@@ -1,3 +1,4 @@
+#pragma once
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -5,10 +6,10 @@
 
 class Entity: public sf::Drawable{
     public:
-        Entity(sf::Vector2f position, sf::Vector2f size,const int id,bool collideResponse)
+        Entity(sf::Vector2f position,const int id,bool collideResponse)
         : collisionResponse(collideResponse),
-         position(position),
-         size(size)
+         position(position)
+         
         {
             
         }

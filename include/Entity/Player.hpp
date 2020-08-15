@@ -1,3 +1,4 @@
+#pragma once
 #include "Entity.hpp"
 #include <Event/Action.hpp>
 #include <Event/ActionMap.hpp>
@@ -9,13 +10,14 @@
 class Player : public Entity{
     //constructor
 public:
-    Player(sf::Vector2f pos, sf::Vector2f size,const int resourceId,bool collideResponse)
-    :Entity(pos,size,resourceId,collideResponse),
+    Player(sf::Vector2f pos,const int resourceId,bool collideResponse)
+    :Entity(pos,resourceId,collideResponse),
      eventTarget(keymap)
     {
         sprite.setTexture(gameResources::ResourceHolder::get().texture.get(resourceId));
-        sprite.setTextureRect(sf::IntRect(0,0,gameResources::ResourceHolder::get().texture.get(resourceId).getSize().x,gameResources::ResourceHolder::get().texture.get(resourceId).getSize().y));
-       
+        position.x = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().x;
+        position.y = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().y;
+        sprite.setTextureRect(sf::IntRect(0,0,position.x,position.y));
         eventTarget.bind(allowedMovement::left,[&](const sf::Event&){position.x -= .1f;});
         eventTarget.bind(allowedMovement::right,[&](const sf::Event&){position.x += .1f;});
         eventTarget.bind(allowedMovement::top,[&](const sf::Event&){position.y -= .1f;});
@@ -51,10 +53,7 @@ public:
         
    
     private:
-        sf::Vector2f position;
-        sf::Vector2f size;
-        sf::Texture texture;
-        sf::Sprite sprite;
+       
          void draw(sf::RenderTarget& target, sf::RenderStates) const
         {
             target.draw(sprite);

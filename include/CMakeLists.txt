@@ -7,10 +7,12 @@ get_property(temp GLOBAL PROPERTY game_libs_list)
 set_property(GLOBAL PROPERTY game_libs_list "${temp}" "${LibName}")
 endfunction()
 
-add_lib_and_include_directories(Entities Entity/Entity.hpp
+add_lib_and_include_directories(Entities Entity/Configuration.hpp
+                   Entity/Entity.hpp
                    Entity/Player.hpp
                    Entity/Player.cpp)
-                   
+
+
 add_lib_and_include_directories(Event Event/Action.hpp
                    Event/Action.cpp
                    Event/ActionMap.hpp
@@ -19,15 +21,12 @@ add_lib_and_include_directories(Event Event/Action.hpp
                    Event/ActionTarget.tpl)
 
 
-
 add_lib_and_include_directories(Resource Resources/ResourceManager.hpp
                      Resources/ResourceManager.tpl
                      Resources/ResourceHolder.hpp
                      Resources/ResourceHolder.cpp
                      )
                      
-
-
 
 add_lib_and_include_directories(Views Views/TileMapView.hpp Views/TileMapView.cpp)
 

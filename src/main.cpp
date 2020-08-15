@@ -20,7 +20,7 @@ int main(){
     gameResources::ResourceHolder::get().texture.load(1,"assets/sdds.png");
 
     Player::setDefaultMovements();
-    Player player(sf::Vector2f(100,100),sf::Vector2f(100,100),1,false);
+    Player player(sf::Vector2f(100,100),1,false);
     
 
    // Player player();
