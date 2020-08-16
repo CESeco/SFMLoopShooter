@@ -9,11 +9,10 @@ class Entity: public sf::Drawable{
         Entity(sf::Vector2f position,const int id,bool collideResponse)
         : collisionResponse(collideResponse),
          position(position)
-         
         {
             
         }
-
+       
     
         virtual void setPosition(sf::Vector2f position)=0;
         virtual sf::Vector2f getPosition()=0;
@@ -21,8 +20,8 @@ class Entity: public sf::Drawable{
         virtual sf::Vector2f getSize()=0;
         virtual bool collides(sf::FloatRect rect)=0;
         virtual bool contains(sf::Vector2f pos)=0;
-
-
+        virtual void update()=0; 
+   
     protected:
         sf::Vector2f position;
         sf::Vector2f size;

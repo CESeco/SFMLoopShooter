@@ -15,42 +15,54 @@ public:
      eventTarget(keymap)
     {
         sprite.setTexture(gameResources::ResourceHolder::get().texture.get(resourceId));
-        position.x = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().x;
-        position.y = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().y;
-        sprite.setTextureRect(sf::IntRect(0,0,position.x,position.y));
-        eventTarget.bind(allowedMovement::left,[&](const sf::Event&){position.x -= .1f;});
-        eventTarget.bind(allowedMovement::right,[&](const sf::Event&){position.x += .1f;});
-        eventTarget.bind(allowedMovement::top,[&](const sf::Event&){position.y -= .1f;});
-        eventTarget.bind(allowedMovement::down,[&](const sf::Event&){position.y += .1f;});
+        size.x = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().x;
+        size.y = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().y;
+        sprite.setTextureRect(sf::IntRect(0,0,size.x,size.y));
+        eventTarget.bind(allowedMovement::left,[&](const sf::Event&){position.x -= .1f;direction=allowedMovement::left;});
+        eventTarget.bind(allowedMovement::right,[&](const sf::Event&){position.x += .1f;direction=allowedMovement::right;});
+        eventTarget.bind(allowedMovement::top,[&](const sf::Event&){position.y -= .1f;direction=allowedMovement::top;});
+        eventTarget.bind(allowedMovement::down,[&](const sf::Event&){position.y += .1f;direction=allowedMovement::down;});
+        sprite.setPosition(position);
+
+        
     }
-    
+    enum allowedMovement{
+            left,right,top,down
+        };
+
+    void reverseDirection();
+
     static void setDefaultMovements();
     void processEvent();
     void update();
 
+    void setPosition(sf::Vector2f position) override ;
+    sf::Vector2f getPosition() override;
 
-    void setPosition(sf::Vector2f position) ;
-    sf::Vector2f getPosition() ;
-    void setSize(sf::Vector2f size) ;
-    sf::Vector2f getSize() ;
+    void setSize(sf::Vector2f size) override;
+    sf::Vector2f getSize() override;
 
-    bool collides(sf::FloatRect rect) ;
-    bool contains(sf::Vector2f pos) ;
+    bool collides(sf::FloatRect rect) override ;
+    bool contains(sf::Vector2f pos) override;
 
     void setHealth(float healthVal);
     float getHealth();
 
     float getVelocity();
     
+    allowedMovement direction;
+
+    sf::FloatRect getBounds(){
+        return sprite.getGlobalBounds();
+    }
+    
     protected:
         float health{100};
-        float velocity{.2f};
-        enum allowedMovement{
-            left,right,top,down
-        };
+        float velocity{.1f};
+
         static ActionMap<int> keymap;
         ActionTarget<int> eventTarget;
-        
+         
    
     private:
        

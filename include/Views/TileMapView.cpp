@@ -1,5 +1,5 @@
 #include "TileMapView.hpp"
-
+#include <iostream>
 TileMapView::TileMapView(const std::string& str):fileName(str){
     loadTilesFromFiles();
 }
@@ -16,14 +16,17 @@ bool TileMapView::loadTilesFromFiles(){
     while(getline(tileStream,temp)){
         int j{0};
         for(char singleTile: temp){
-            tiles[j][i] = singleTile;
+            tiles[i][j] = singleTile;
+            //std::cout << tiles[i][j] << "(" << i<< "," <<j <<")" << " ";
+
             j++;
         }
+        std::cout << std::endl;
         i++;
         }  
 
     }else{
-        std::cout << "unable to open tileFiles" << std::endl;
+        //std::cout << "unable to open tileFiles" << std::endl;
     }
     return success;
 }
@@ -31,17 +34,17 @@ bool TileMapView::loadTilesFromFiles(){
 bool TileMapView::processTiles(){
     for(int i{0};i<max_tiles_y;i++){
         for(int j{0};j<max_tiles_x;j++){
-            switch(tiles[j][i]){
+            switch(tiles[i][j]){
                 case '0':
                     break;
                 case 't':
-                    addEntities(j*tile_size_x,i*tile_size_y,Entities::Tree);
+                    addEntities((j)*tile_size_x,(i)*tile_size_y,Entities::Tree);
                     break;
                 case 'b':
-                     addEntities(j*tile_size_x,i*tile_size_y,Entities::WoodenBox);
+                     addEntities((j)*tile_size_x,(i)*tile_size_y,Entities::WoodenBox);;
                      break;
                 case 's':
-                    addEntities(j*tile_size_x,i*tile_size_y,Entities::Stone);
+                    addEntities((j)*tile_size_x,(i)*tile_size_y,Entities::Tree);
                     break;
             }
         }
@@ -50,5 +53,10 @@ bool TileMapView::processTiles(){
 }
 
 void TileMapView::addEntities(int posX, int posY, Entities type){
-    
-}
+    //std::cout << entityList.size() << std::endl;
+    entityList.emplace_back(new StaticEntities(sf::Vector2f(posX,posY),static_cast<int>(type),false));
+} 
+
+
+
+

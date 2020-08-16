@@ -7,21 +7,26 @@
 #include <SFML/Graphics.hpp>
 
 #include <Entity/Player.hpp>
-
+#include <Views/TileContainerView.hpp>
+#include <Entity/StaticEntities.hpp>
 enum KeyCode{
     Top, Down ,Left ,Right
 };
 
 int main(){
 
-    sf::RenderWindow window{sf::VideoMode(800,600),"My window"};
+    sf::RenderWindow window{sf::VideoMode(1200,800),"My window"};
     sf::RectangleShape rect;
     
     gameResources::ResourceHolder::get().texture.load(1,"assets/sdds.png");
+    gameResources::ResourceHolder::get().texture.load(2,"assets/tree.png");
+    gameResources::ResourceHolder::get().texture.load(3,"assets/box.png");
 
-    Player::setDefaultMovements();
-    Player player(sf::Vector2f(100,100),1,false);
+
+   
     
+    TileContainerView tile("assets/tile.txt");
+
 
    // Player player();
    /*  rect.setSize(sf::Vector2f(100,100));
@@ -48,7 +53,7 @@ int main(){
     target.bind(KeyCode::Left,[&pos](const sf::Event&){pos.x-=.1f;});
     target.bind(KeyCode::Right,[&pos](const sf::Event&){pos.x+=.1f;}); */
     
-    
+ 
     while(window.isOpen()){
         sf::Event event;
         while(window.pollEvent(event)){
@@ -58,11 +63,13 @@ int main(){
         }
      /*    rect.setPosition(pos);
         target.processEvents(); */
-        player.processEvent();
-        player.update();
-        window.clear();
+       
+       tile.processEvents();
+       tile.update();
+        window.clear(sf::Color::White);
         //window.draw(rect);
-        window.draw(player);
+        
+        window.draw(tile);
         window.display();
 
     }

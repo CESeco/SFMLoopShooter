@@ -10,7 +10,8 @@ void Player::setDefaultMovements(){
 }
 
 void Player::processEvent(){
-    eventTarget.processEvents();
+    
+        eventTarget.processEvents();
 }
 
 void Player::setPosition(sf::Vector2f pos){
@@ -35,4 +36,18 @@ bool Player::collides(sf::FloatRect rect){
 }
 bool Player::contains(sf::Vector2f pos){
     return sprite.getGlobalBounds().contains(pos);
+}
+
+void Player::reverseDirection(){
+    std::cout << direction << std::endl;
+    if(direction == allowedMovement::right) {
+        position.x -= velocity;
+    }else if(direction == allowedMovement::left){
+        position.x += velocity;
+    }else if(direction == allowedMovement::top){
+        position.y += velocity;
+    }else{
+        position.y -= velocity;
+    }
+    
 }

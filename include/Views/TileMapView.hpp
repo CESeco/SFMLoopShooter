@@ -8,20 +8,37 @@
 #include <Entity/Entity.hpp>
 #include "Configuration.hpp"
 #include <Entity/Configuration.hpp>
+#include <vector>
+
+//have to call processTiles
 
 class TileMapView : public sf::Drawable{
     public:
        
-
+        
         TileMapView(const std::string& str);
         bool processTiles();
-    private:
         
+        
+    private:
+        friend class TileContainerView;
         bool loadTilesFromFiles();
         void addEntities(int posX, int posY , Entities type);
         char tiles[max_tiles_x][max_tiles_y];
-        std::list<std::pair<Entity*,int>> entityList;
+        
         std::string fileName;
-        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+        std::vector<std::shared_ptr<Entity>> entityList;
+
+       
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
+
+            for(auto c : entityList){
+                //std::cout << c->getPosition().x << c->getPosition().y << std::endl;
+
+                //check for collision with player right here
+
+                target.draw(*c);
+            }
+        }
 
 };
