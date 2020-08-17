@@ -22,7 +22,9 @@ add_lib_and_include_directories(Event Event/Action.hpp
                    Event/ActionMap.hpp
                    Event/ActionMap.tpl
                    Event/ActionTarget.hpp
-                   Event/ActionTarget.tpl)
+                   Event/ActionTarget.tpl
+                   Event/EventRecorder.hpp)
+
 
 
 add_lib_and_include_directories(Resource Resources/ResourceManager.hpp

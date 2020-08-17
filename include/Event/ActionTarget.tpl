@@ -1,11 +1,12 @@
-
+//make a copy of pair instead of event
 template<typename T>
-ActionTarget<T>::ActionTarget(const ActionMap<T>& map) :_actionMap(const_cast<ActionMap<T>&>(map))
-{
+ActionTarget<T>::ActionTarget(const ActionMap<T>& map) :_actionMap(const_cast<ActionMap<T>&>(map)),recorder(true){  //start recording at first
+    clock.restart();
+    std::cout << "action target inititated" << std::endl;
 }
 
 template<typename T>
-bool ActionTarget<T>::processEvent(const sf::Event& event) const 
+bool ActionTarget<T>::processEvent(const sf::Event& event)
 {
     bool res = false;
     for(auto& pair:_eventsRealTime){
@@ -15,20 +16,37 @@ bool ActionTarget<T>::processEvent(const sf::Event& event) const
             res = true;
             break;
         }
-    }
+       }
     return res;
 }
 
 template <typename T>
-void ActionTarget<T>::processEvents() const
+void ActionTarget<T>::processEvents() 
 {
     for(auto& pair: _eventsRealTime)
     {
         Action& action = _actionMap.get(pair.first);
-        if(_actionMap.get(pair.first).test())
+        if(!playMode){
+        if(_actionMap.get(pair.first).test()){
+            
             pair.second(action._event);
+            recorder.addEventRecord(pair.second);
+        }
+        }
+        else{
+           std::pair<sf::Time,FuncType> recordedEvent = recorder.getCurrentRecord();
+           
+           if(clock.getElapsedTime() >= recordedEvent.first){
+               std::cout << "caught a record at " << recordedEvent.first.asSeconds() << " when time is " << clock.getElapsedTime().asSeconds() << std::endl;
+               if(recorder.increaseIterator())
+                recordedEvent.second(action._event);
+               break;
+             }
+           }
+        }
+        
     }
-}
+
 
 template<typename T>
 void ActionTarget<T>::bind(const T& key, const FuncType& callback)

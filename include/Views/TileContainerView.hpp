@@ -46,7 +46,7 @@ class TileContainerView: public sf::Drawable {
             for(auto& entity: view.entityList){
                 if(entity->collides(player.getBounds())){
                     player.reverseDirection();
-                    return false;
+                    return true;
                 }
                     
             }
@@ -65,7 +65,7 @@ class TileContainerView: public sf::Drawable {
 
         void update(){
             //std::cout << player.getPosition().x << " " << player.getPosition().y << std::endl;
-            std::cout << player.getPosition().x << " " << player.getPosition().y << std::endl;
+            //std::cout << player.getPosition().x << " " << player.getPosition().y << std::endl;
             player.update();
             
         }

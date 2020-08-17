@@ -21,7 +21,7 @@ bool TileMapView::loadTilesFromFiles(){
 
             j++;
         }
-        std::cout << std::endl;
+        
         i++;
         }  
 

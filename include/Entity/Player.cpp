@@ -39,7 +39,9 @@ bool Player::contains(sf::Vector2f pos){
 }
 
 void Player::reverseDirection(){
-    std::cout << direction << std::endl;
+   setPosition(sf::Vector2f(601,401));
+    //eventTarget.setPlayMode();
+    
     if(direction == allowedMovement::right) {
         position.x -= velocity;
     }else if(direction == allowedMovement::left){
