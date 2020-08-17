@@ -9,6 +9,9 @@ class TileContainerView: public sf::Drawable {
             cameraView.reset(sf::FloatRect(0.f,0.f,1200.f,800.f));
             Player::setDefaultMovements();
             center = cameraView.getCenter();
+            drawGrids();
+            drawConstraintBackground();
+            
         }
         void changeCenter(float newPosA,float newPosB){
             cameraView.setCenter(newPosA,newPosB);
@@ -34,6 +37,10 @@ class TileContainerView: public sf::Drawable {
             }
 
         }
+        void drawGrids();
+        void drawConstraintRectangle(sf::Vector2f pos, sf::Vector2f size,sf::Color color);
+        void drawConstraintBackground();
+
         
 
         //for movement reasons build a large rectangle around the the regions where we don't want player to go and if player collides with those rectangles player can't move
@@ -63,6 +70,7 @@ class TileContainerView: public sf::Drawable {
         return false;          
         }
 
+
         void update(){
             //std::cout << player.getPosition().x << " " << player.getPosition().y << std::endl;
             //std::cout << player.getPosition().x << " " << player.getPosition().y << std::endl;
@@ -72,13 +80,18 @@ class TileContainerView: public sf::Drawable {
       
 
     private:
+        std::vector<sf::RectangleShape> constraintsRectangle;
         TileMapView view;
         sf::Vector2f center;
         Player player;
         sf::View cameraView;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
+            target.clear(sf::Color(128,175,73));
             target.setView(cameraView);
+            for(auto& rect: constraintsRectangle){
+                target.draw(rect);
+            }
             target.draw(view);
             target.draw(player);
             

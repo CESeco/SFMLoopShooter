@@ -34,7 +34,7 @@ add_lib_and_include_directories(Resource Resources/ResourceManager.hpp
                      )
                      
 
-add_lib_and_include_directories(Views Views/Configuration.hpp Views/TileMapView.hpp Views/TileMapView.cpp Views/TileMapView.hpp Views/TileMapView.cpp)
+add_lib_and_include_directories(Views Views/Configuration.hpp Views/TileMapView.hpp Views/TileMapView.cpp Views/TileContainerView.hpp Views/TileContainerView.cpp)
 
 
 

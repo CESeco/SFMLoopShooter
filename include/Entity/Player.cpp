@@ -39,7 +39,7 @@ bool Player::contains(sf::Vector2f pos){
 }
 
 void Player::reverseDirection(){
-   setPosition(sf::Vector2f(601,401));
+   //setPosition(sf::Vector2f(601,401));
     //eventTarget.setPlayMode();
     
     if(direction == allowedMovement::right) {
