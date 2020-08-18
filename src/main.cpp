@@ -21,11 +21,11 @@ int main(){
     gameResources::ResourceHolder::get().texture.load(1,"assets/sdds.png");
     gameResources::ResourceHolder::get().texture.load(2,"assets/tree.png");
     gameResources::ResourceHolder::get().texture.load(3,"assets/box.png");
-
+    gameResources::ResourceHolder::get().texture.load(4,"assets/bullet.png");
 
    
     
-    TileContainerView tile("assets/tile.txt");
+    TileContainerView tile("assets/tile.txt",window);
 
 
    // Player player();

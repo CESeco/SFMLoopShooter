@@ -3,7 +3,7 @@
 
 class TileContainerView: public sf::Drawable {
     public:
-        TileContainerView(const std::string& str):view(str),player(sf::Vector2f(601,401),1,false){
+        TileContainerView(const std::string& str,sf::RenderWindow& window):view(str),player(sf::Vector2f(601,401),1,false,window){
             view.processTiles();
            
             cameraView.reset(sf::FloatRect(0.f,0.f,1200.f,800.f));
@@ -41,7 +41,9 @@ class TileContainerView: public sf::Drawable {
         void drawConstraintRectangle(sf::Vector2f pos, sf::Vector2f size,sf::Color color);
         void drawConstraintBackground();
 
-        
+       void checkProjectileCollision(Player& player,std::shared_ptr<Entity> entity);
+         
+    
 
         //for movement reasons build a large rectangle around the the regions where we don't want player to go and if player collides with those rectangles player can't move
         void buildConstrainingRectangles(){
@@ -51,8 +53,10 @@ class TileContainerView: public sf::Drawable {
 
         bool fixCollision(Player& player){
             for(auto& entity: view.entityList){
+                checkProjectileCollision(player,entity);
                 if(entity->collides(player.getBounds())){
                     player.reverseDirection();
+                    
                     return true;
                 }
                     
@@ -75,6 +79,7 @@ class TileContainerView: public sf::Drawable {
             //std::cout << player.getPosition().x << " " << player.getPosition().y << std::endl;
             //std::cout << player.getPosition().x << " " << player.getPosition().y << std::endl;
             player.update();
+            
             
         }
       

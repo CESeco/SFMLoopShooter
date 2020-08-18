@@ -16,4 +16,6 @@
 #define tile_size_x 100
 #define tile_size_y 100
 
+#define max_coords_x tile_size_x*max_tiles_x
+#define max_coords_y tile_size_y*max_tiles_y
 

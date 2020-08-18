@@ -2,7 +2,7 @@
 template<typename T>
 ActionTarget<T>::ActionTarget(const ActionMap<T>& map) :_actionMap(const_cast<ActionMap<T>&>(map)),recorder(true){  //start recording at first
     clock.restart();
-    std::cout << "action target inititated" << std::endl;
+    //std::cout << "action target inititated" << std::endl;
 }
 
 template<typename T>

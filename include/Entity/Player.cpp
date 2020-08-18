@@ -7,10 +7,11 @@ void Player::setDefaultMovements(){
     keymap.map(allowedMovement::right,Action(sf::Keyboard::D));
     keymap.map(allowedMovement::top,Action(sf::Keyboard::W));
     keymap.map(allowedMovement::down,Action(sf::Keyboard::S));
+    keymap.map(allowedMovement::fire,Action(sf::Mouse::Left));
+
 }
 
 void Player::processEvent(){
-    
         eventTarget.processEvents();
 }
 
@@ -23,6 +24,21 @@ sf::Vector2f Player::getPosition(){
 }
 void Player::update(){
     sprite.setPosition(position);
+    if(rateFireCountClock.getElapsedTime().asSeconds() > 0.5f){
+        rateCount=0;
+    }
+
+    if(!projectile.empty()){
+    for(auto proj{projectile.begin()};proj < projectile.end() ; proj++ ){
+        sf::Vector2f pos{(*proj)->getPosition()};
+        if(pos.x > max_coords_x or pos.y > max_coords_y or pos.x < 0 or pos.y <0 or (*proj)->toRemove()){
+            projectile.erase(proj);
+            continue;
+        }
+        (*proj)->update();
+        
+      }
+    }
 }
 
 sf::Vector2f Player::getSize(){

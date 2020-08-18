@@ -10,6 +10,7 @@ endfunction()
 add_lib_and_include_directories(Entities 
                    Entity/Entity.hpp
                    Entity/StaticEntities.hpp
+                   Entity/Projectile.hpp
                    Entity/Player.hpp
                    Entity/Player.cpp
                    Entity/Configuration.hpp

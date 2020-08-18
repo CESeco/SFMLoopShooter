@@ -19,7 +19,7 @@ class EventRecorder{
     public:
         EventRecorder(bool record){
             
-            std::cout << "recording has been started" << std::endl;
+            //std::cout << "recording has been started" << std::endl;
             this->record = record;
             clock.restart();
             
@@ -34,7 +34,7 @@ class EventRecorder{
         }
 
         void addEventRecord(FuncType event){
-            std::cout << "recorded at " << clock.getElapsedTime().asSeconds() << std::endl;
+            //std::cout << "recorded at " << clock.getElapsedTime().asSeconds() << std::endl;
             recordList.emplace_back(std::make_pair(clock.getElapsedTime(),event));
         }
 

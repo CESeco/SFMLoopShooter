@@ -1,5 +1,5 @@
 #include "TileContainerView.hpp"
-
+#include "Configuration.hpp"
 void TileContainerView::drawConstraintRectangle(sf::Vector2f position , sf::Vector2f size,sf::Color color){
     constraintsRectangle.emplace_back(sf::RectangleShape(size));
     constraintsRectangle.back().setPosition(position);
@@ -23,5 +23,15 @@ void TileContainerView::drawGrids(){
     while(countY <= 2000){
         drawConstraintRectangle(sf::Vector2f(0,countY),sf::Vector2f(3600,20),sf::Color(109,149,62,255));
         countY += 400;
+    }
+}
+
+void TileContainerView::checkProjectileCollision(Player& player,std::shared_ptr<Entity> entity){
+    for(auto proj : player.projectile){
+        
+       if(entity->collides(proj->getBounds())){
+           //std::cout << "projectile collided in position " << entity->getPosition().x << " " << entity->getPosition().y << std::endl;
+           proj->remove();
+       }
     }
 }
