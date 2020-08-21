@@ -33,5 +33,6 @@ void TileContainerView::checkProjectileCollision(Player& player,std::shared_ptr<
            //std::cout << "projectile collided in position " << entity->getPosition().x << " " << entity->getPosition().y << std::endl;
            proj->remove();
        }
+       
     }
 }

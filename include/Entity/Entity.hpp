@@ -4,8 +4,10 @@
 #include <iostream>
 #include <Resources/ResourceHolder.hpp>
 
+
 class Entity: public sf::Drawable{
     public:
+        //position for entity current position, id represents Resource Id(Resource id points out which texture to use for particular sprite)
         Entity(sf::Vector2f position,const int id,bool collideResponse)
         : collisionResponse(collideResponse),
          position(position)
@@ -13,7 +15,7 @@ class Entity: public sf::Drawable{
             
         }
        
-    
+        
         virtual void setPosition(sf::Vector2f position)=0;
         virtual sf::Vector2f getPosition()=0;
         virtual void setSize(sf::Vector2f size)=0;

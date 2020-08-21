@@ -5,37 +5,40 @@
 #include <Event/ActionTarget.hpp>
 #include <Views/Configuration.hpp>
 #include "Projectile.hpp"
+#include <SFML/Network.hpp>
+#include <GameLogic/NetworkHandler.hpp>
+
 //remember to call setDefaultMovements before instantiating this class
 
 class Player : public Entity
 {
     //constructor
 public:
-    Player(sf::Vector2f pos, const int resourceId, bool collideResponse, sf::RenderWindow &target)
-        : Entity(pos, resourceId, collideResponse),
-          eventTarget(keymap)
+   
+    
+    Player(sf::Vector2f pos, const int resourceId, bool collideResponse, sf::RenderWindow& window,int sCount,int portCount,bool primary)
+        : Entity(pos, resourceId, collideResponse),window(window),eventTarget(keymap),sCount(sCount),portCount(portCount),dataReceiver(&Player::listenNetworkEvents,this)
+    
     {
+        
         sprite.setTexture(gameResources::ResourceHolder::get().texture.get(resourceId));
         size.x = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().x;
         size.y = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().y;
         sprite.setTextureRect(sf::IntRect(0, 0, size.x, size.y));
-        eventTarget.bind(allowedMovement::left, [&](const sf::Event &) {position.x -= .1f;direction=allowedMovement::left; });
-        eventTarget.bind(allowedMovement::right, [&](const sf::Event &) {position.x += .1f;direction=allowedMovement::right; });
-        eventTarget.bind(allowedMovement::top, [&](const sf::Event &) {position.y -= .1f;direction=allowedMovement::top; });
-        eventTarget.bind(allowedMovement::down, [&](const sf::Event &) {position.y += .1f;direction=allowedMovement::down; });
-        eventTarget.bind(allowedMovement::fire, [&](const sf::Event &) {
-            //std::cout << "fired " << std::endl;
-            sf::Vector2i destPos{sf::Mouse::getPosition(target)};
-            sf::Vector2f newPos{(position.x + size.x / 2), (position.y + size.y / 2)};
-            if (rateCount < 1)
-            {
-                projectile.emplace_back(new Projectile(newPos, target.mapPixelToCoords(destPos), 4, true, 0.2f, 10.f));
-                rateCount++;
-                rateFireCountClock.restart();
-            }
-        });
         sprite.setPosition(position);
+        sSock.setBlocking(false);
+        //sListener.setBlocking(false);
+
+        if(!primary)
+            dataReceiver.launch();
+        
     }
+        
+
+     void sbind();
+     //void cbind();
+    
+   
     enum allowedMovement
     {
         left,
@@ -44,6 +47,8 @@ public:
         down,
         fire
     };
+
+    void bind();
 
     void reverseDirection();
 
@@ -71,25 +76,57 @@ public:
     {
         return sprite.getGlobalBounds();
     }
+    int getCount(){
+        return sCount;
+    }
+    void stopRendering(){
+        allowRendering = false;
+    }
+    void startRendering(){
+        allowRendering = true;
+    }
+
+    bool isRendering(){
+        return allowRendering;
+    }
+    void listenNetworkEvents();
+    
+    void setEventPlayMode(){
+
+        eventTarget.setPlayMode();
+        
+    }
+    void setUserControlMode(){
+        eventTarget.setRecordMode();
+    }
     std::vector<std::shared_ptr<Projectile>> projectile;
+    std::vector<std::shared_ptr<Projectile>> preservedProjectile;
+    int count{0};
 protected:
     float health{100};
     float velocity{.1f};
-
+    int sCount;
     static ActionMap<int> keymap;
     ActionTarget<int> eventTarget;
-    
+    sf::TcpListener sListener;
+    sf::TcpSocket sSock;
 
 private:
+    
+    int portCount;
+    bool allowRendering{true};
     int rateCount{0};
     sf::Clock rateFireCountClock;
-
+    sf::RenderWindow& window;
+    sf::Thread dataReceiver;
     void draw(sf::RenderTarget &target, sf::RenderStates) const
     {
+       if(allowRendering){
         for (auto &proj : projectile)
         {
             target.draw(*proj);
         }
         target.draw(sprite);
+        }
     }
 };

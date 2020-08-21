@@ -37,7 +37,7 @@ void ActionTarget<T>::processEvents()
            std::pair<sf::Time,FuncType> recordedEvent = recorder.getCurrentRecord();
            
            if(clock.getElapsedTime() >= recordedEvent.first){
-               std::cout << "caught a record at " << recordedEvent.first.asSeconds() << " when time is " << clock.getElapsedTime().asSeconds() << std::endl;
+               //std::cout << "caught a record at " << recordedEvent.first.asSeconds() << " when time is " << clock.getElapsedTime().asSeconds() << std::endl;
                if(recorder.increaseIterator())
                 recordedEvent.second(action._event);
                break;

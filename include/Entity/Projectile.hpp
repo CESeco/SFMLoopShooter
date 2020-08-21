@@ -5,10 +5,10 @@
 class Projectile: public Entity{
 
 public:
-Projectile(sf::Vector2f pos,sf::Vector2f destination, const int resourceId,bool collideResponse,float velocity , float damage)
-    :Entity(pos,resourceId,collideResponse),destination(destination),velocity(velocity),damage(damage)
+Projectile(sf::Vector2f pos,sf::Vector2f destination, const int resourceId,bool collideResponse,float velocity , float damage, int sCount)
+    :Entity(pos,resourceId,collideResponse),destination(destination),velocity(velocity),damage(damage),sCount(sCount)
     {
-        std::cout << "new Sprite Created with " << pos.x << " " << pos.y << " with a destination of " << destination.x << " " << destination.y << std::endl;
+        //std::cout << "new Sprite Created with " << pos.x << " " << pos.y << " with a destination of " << destination.x << " " << destination.y << std::endl;
         sprite.setTexture(gameResources::ResourceHolder::get().texture.get(resourceId));
         size.x = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().x;
         size.y = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().y;
@@ -35,7 +35,7 @@ float calculateAngle(){
    if(destination.x < position.x){
        angleDegrees+=3.14159265f;
    }
-    std::cout << "the angle is " << angleDegrees << std::endl;
+    //std::cout << "the angle is " << angleDegrees << std::endl;
     return angleDegrees;
 }
 
@@ -43,6 +43,9 @@ float calculateAngle(){
 
 void setPosition(sf::Vector2f pos){
     position = pos;
+}
+int getCount(){
+    return sCount;
 }
 
 sf::Vector2f getPosition(){
@@ -74,7 +77,11 @@ bool toRemove(){
 void remove(){
     deleteProjectile = true;
 }
+sf::Vector2f getDestination(){
+    return destination;
+}
 private:
+         int sCount;
          bool deleteProjectile{false};
          float velocity;
          float damage;

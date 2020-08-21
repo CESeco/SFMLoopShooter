@@ -37,8 +37,9 @@ add_lib_and_include_directories(Resource Resources/ResourceManager.hpp
 
 add_lib_and_include_directories(Views Views/Configuration.hpp Views/TileMapView.hpp Views/TileMapView.cpp Views/TileContainerView.hpp Views/TileContainerView.cpp)
 
+add_lib_and_include_directories(GameLogic GameLogic/GameLogic.hpp GameLogic/GameLogic.cpp GameLogic/NetworkInterface.hpp GameLogic/GameHost.hpp GameLogic/GameClient.hpp GameLogic/NetworkHandler.hpp)
 
-
+add_lib_and_include_directories(GUI GUI/Widget.hpp GUI/Button.hpp GUI/Button.cpp GUI/Widget.hpp GUI/Widget.cpp)
 
 
 
