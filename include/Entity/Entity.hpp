@@ -3,14 +3,16 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <Resources/ResourceHolder.hpp>
+#include <Resources/configuration.hpp>
 
 
 class Entity: public sf::Drawable{
     public:
         //position for entity current position, id represents Resource Id(Resource id points out which texture to use for particular sprite)
-        Entity(sf::Vector2f position,const int id,bool collideResponse)
+        Entity(sf::Vector2f position,const DefaultResources id,bool collideResponse)
         : collisionResponse(collideResponse),
-         position(position)
+         position(position),
+         resourceId(id)
         {
             
         }
@@ -25,6 +27,7 @@ class Entity: public sf::Drawable{
         virtual void update()=0; 
    
     protected:
+        DefaultResources resourceId;
         sf::Vector2f position;
         sf::Vector2f size;
         sf::Texture texture;

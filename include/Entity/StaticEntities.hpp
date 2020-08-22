@@ -6,7 +6,7 @@
 
 class StaticEntities : public Entity{
     public:
-    StaticEntities(sf::Vector2f pos,const int resourceId,bool collideResponse)
+    StaticEntities(sf::Vector2f pos,const DefaultResources resourceId,bool collideResponse)
     :Entity(pos,resourceId,collideResponse)
     {
         //std::cout << "new Sprite Created with " << pos.x << " " << pos.y << std::endl;

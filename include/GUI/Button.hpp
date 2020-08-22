@@ -11,25 +11,35 @@ class Button: public Widget{
     enum ButtonEvent{
         press
     };
-        Button(sf::Vector2f position,sf::Vector2f size,int fontResourceID, const sf::RenderWindow& window);
+        Button(sf::Vector2f position,sf::Vector2f size,DefaultFont fontResourceID, const sf::RenderWindow& window);
         void setText(const std::string& str,int size,sf::Color color);
-        void setBackgroundColor(const sf::Color color);
+
+        void setBackgroundColor(sf::Color color,sf::Color hoverColor);
+        
         sf::Vector2f getSize() const override;
         void setPosition(const sf::Vector2f& position) override;
-        void processEvent(const sf::RenderWindow& window) override;
+        void processEvent(sf::Event event,const sf::RenderWindow& window) override;
 
-
+        void addFunction(std::function<void()> func){
+            function = func;
+        }
         
-
-        static void setMappings();
-        void addTargets();
+        
 
     private:
         
         const sf::RenderWindow& window;
-        static ActionMap<ButtonEvent> map;
-        ActionTarget<ButtonEvent> actionTarget;
-        virtual void draw(sf::RenderTarget& target,sf::RenderStates states);
+        sf::RectangleShape rectangle;
+        sf::Text text;
+        sf::Color mainColor;
+        sf::Color hoverColor;
+        std::function<void()> function;
+
+        void draw(sf::RenderTarget& target,sf::RenderStates states) const{
+            target.draw(rectangle);
+            target.draw(text);
+        }
+
 
         
 

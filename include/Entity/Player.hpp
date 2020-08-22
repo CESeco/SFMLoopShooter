@@ -7,6 +7,7 @@
 #include "Projectile.hpp"
 #include <SFML/Network.hpp>
 #include <GameLogic/NetworkHandler.hpp>
+#include <Resources/configuration.hpp>
 
 //remember to call setDefaultMovements before instantiating this class
 
@@ -16,7 +17,7 @@ class Player : public Entity
 public:
    
     
-    Player(sf::Vector2f pos, const int resourceId, bool collideResponse, sf::RenderWindow& window,int sCount,int portCount,bool primary)
+    Player(sf::Vector2f pos, const DefaultResources resourceId, bool collideResponse, sf::RenderWindow& window,int sCount,int portCount,bool primary)
         : Entity(pos, resourceId, collideResponse),window(window),eventTarget(keymap),sCount(sCount),portCount(portCount),dataReceiver(&Player::listenNetworkEvents,this)
     
     {
@@ -26,19 +27,21 @@ public:
         size.y = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().y;
         sprite.setTextureRect(sf::IntRect(0, 0, size.x, size.y));
         sprite.setPosition(position);
-        sSock.setBlocking(false);
+        //sSock.setBlocking(false);
         //sListener.setBlocking(false);
-
+        
         if(!primary)
             dataReceiver.launch();
+        
+        
         
     }
         
 
-     void sbind();
+     void sbind(bool keepOnAsk);
      //void cbind();
     
-   
+     void networkEvent(std::string type,double a, double b);
     enum allowedMovement
     {
         left,
@@ -109,10 +112,10 @@ protected:
     static ActionMap<int> keymap;
     ActionTarget<int> eventTarget;
     sf::TcpListener sListener;
-    sf::TcpSocket sSock;
+    
 
 private:
-    
+    sf::TcpSocket sSocket;
     int portCount;
     bool allowRendering{true};
     int rateCount{0};

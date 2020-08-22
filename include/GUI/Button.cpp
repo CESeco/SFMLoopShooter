@@ -1,44 +1,60 @@
 #include "Button.hpp"
 
-// Mappings first
-void Button::setMappings(){
-    map.map(ButtonEvent::press,Action(sf::Mouse::Left));
-}
-
-void Button::addTargets(){
-    actionTarget.bind(ButtonEvent::press,[](const sf::Event&){std::cout << "button was pressed" << std::endl;});
-}
-
-Button::Button(sf::Vector2f position,sf::Vector2f size,int fontResourceID, const sf::RenderWindow& window) :
- Widget(position,size,fontResourceID),window(window),actionTarget(map)
+Button::Button(sf::Vector2f position, sf::Vector2f size, DefaultFont fontResourceID, const sf::RenderWindow &window) : Widget(position, size, fontResourceID), window(window)
 {
     //addTargets();
-    outerShape.setPosition(position);
-    outerShape.setSize(size);
+    rectangle.setPosition(position);
+    rectangle.setSize(size);
     text.setFont(gameResources::ResourceHolder::get().font.get(fontResourceID));
-
+    text.setPosition(position);
 }
+void Button::setBackgroundColor(sf::Color color, sf::Color hoverColor)
+{
+    rectangle.setFillColor(color);
+    this->mainColor = color;
+    this->hoverColor = hoverColor;
+}
+// Mappings first
 
-void Button::setPosition(const sf::Vector2f& pos){
+void Button::setPosition(const sf::Vector2f &pos)
+{
     position = pos;
 }
 
-sf::Vector2f Button::getSize() const{
+sf::Vector2f Button::getSize() const
+{
     return size;
 }
 
-void Button::processEvent(const sf::RenderWindow& window){
-    actionTarget.processEvents();
+void Button::processEvent(sf::Event event, const sf::RenderWindow &window)
+{
+    //getting the position of mouse
+    bool insideButtonClicked{false};
+    auto position = sf::Mouse::getPosition(window);
+    if (event.type == sf::Event::MouseButtonPressed)
+    {
+        if (event.mouseButton.button == sf::Mouse::Left)
+        {
+            insideButtonClicked = true;
+        }
+    }
+    if (rectangle.getGlobalBounds().contains(position.x, position.y))
+    {
+        rectangle.setFillColor(hoverColor);
+        if (insideButtonClicked)
+            function();
+    }
+    else
+    {
+        rectangle.setFillColor(mainColor);
+    }
 }
 
-void Button::setText(const std::string& str,int size,sf::Color color){
-    
+void Button::setText(const std::string &str, int size, sf::Color color)
+{
+
     text.setString(str);
     text.setCharacterSize(size);
     text.setFillColor(color);
-        //text ko setposition
     text.setStyle(sf::Text::Bold);
-
 }
-
-

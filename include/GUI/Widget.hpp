@@ -4,10 +4,10 @@
 #include <memory>
 #include <Resources/ResourceHolder.hpp>
 
-class Widget : sf::Drawable{
+class Widget : public sf::Drawable{
     public:
-        Widget(sf::Vector2f position, sf::Vector2f size, int fontResourceId){}
-        virtual void processEvent(const sf::RenderWindow& window) = 0; 
+        Widget(sf::Vector2f position, sf::Vector2f size, DefaultFont fontResourceId){}
+        virtual void processEvent(sf::Event e,const sf::RenderWindow& window) = 0; 
         virtual void setPosition(const sf::Vector2f& position) = 0;
         virtual sf::Vector2f getSize() const = 0;
 

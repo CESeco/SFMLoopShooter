@@ -12,7 +12,7 @@ class TileContainerView: public sf::Drawable {
         {
             view.processTiles();
            
-            cameraView.reset(sf::FloatRect(0.f,0.f,1200.f,800.f));
+            cameraView.reset(sf::FloatRect(0.f,0.f,screen_size_x,screen_size_y));
             
             
             center = cameraView.getCenter();
@@ -35,6 +35,8 @@ class TileContainerView: public sf::Drawable {
         
            
             fixCollision(gamePlayers.getPrimaryPlayer());
+
+            fixCollision(gamePlayers.getSecondaryPlayer());
             //fixCollision(*player.second);
             sf::Vector2f prevPos{gamePlayers.getPrimaryPlayerPosition()};
             Player& player = gamePlayers.getPrimaryPlayer();
@@ -44,15 +46,26 @@ class TileContainerView: public sf::Drawable {
                 changeCenter(gamePlayers.getPrimaryPlayer().getPosition().x, gamePlayers.getPrimaryPlayer().getPosition().y);
             
             }else{
-                if(player.getPosition().x < 600){
-                    player.setPosition(sf::Vector2f(600,player.getPosition().y));
-                }else if(player.getPosition().y < 400){
-                    player.setPosition(sf::Vector2f(player.getPosition().x,400));
-                }else if(player.getPosition().x > 3000){
-                    player.setPosition(sf::Vector2f(3000,player.getPosition().y));
-                }else if(player.getPosition().y > 2000){
-                    player.setPosition(sf::Vector2f(player.getPosition().x,2000));
+                if(player.getPosition().x < screen_size_x/2){
+                    player.setPosition(sf::Vector2f(screen_size_x/2,player.getPosition().y));
+                }else if(player.getPosition().y < screen_size_y/2){
+                    player.setPosition(sf::Vector2f(player.getPosition().x,screen_size_y/2));
+                }else if(player.getPosition().x > (max_coords_x-screen_size_x/2)){
+                    player.setPosition(sf::Vector2f((max_coords_x-screen_size_x/2),player.getPosition().y));
+                }else if(player.getPosition().y > (max_coords_y-screen_size_y/2)){
+                    player.setPosition(sf::Vector2f(player.getPosition().x,(max_coords_y-screen_size_y/2)));
                 }
+                
+                 if(secPlayer.getPosition().x < screen_size_x/2){
+                    secPlayer.setPosition(sf::Vector2f(screen_size_x/2,secPlayer.getPosition().y));
+                }else if(secPlayer.getPosition().y < screen_size_y/2){
+                    secPlayer.setPosition(sf::Vector2f(secPlayer.getPosition().x,screen_size_y/2));
+                }else if(secPlayer.getPosition().x > (max_coords_x-screen_size_x/2)){
+                    secPlayer.setPosition(sf::Vector2f((max_coords_x-screen_size_x/2),secPlayer.getPosition().y));
+                }else if(secPlayer.getPosition().y > (max_coords_y-screen_size_y/2)){
+                    secPlayer.setPosition(sf::Vector2f(secPlayer.getPosition().x,(max_coords_y-screen_size_y/2)));
+                }
+                
             
             }
             if(gamePlayers.playerInstance.size() > 1){
@@ -100,10 +113,10 @@ class TileContainerView: public sf::Drawable {
         }
 
         bool toMove(sf::Vector2f position){
-          float windowHW = 600;  //window half width
-          float windowHH = 400; //window half height
+          float windowHW = screen_size_x/2;  //window half width
+          float windowHH = screen_size_y/2; //window half height
 
-          if(position.x >= windowHW and position.y >= windowHH  and position.x <= 3000 and position.y <= 2000){
+          if(position.x >= windowHW and position.y >= windowHH  and position.x <= (max_coords_x-screen_size_x/2) and position.y <= (max_coords_y-screen_size_y/2)){
             return true;
           }
         return false;          

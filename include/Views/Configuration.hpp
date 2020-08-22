@@ -8,8 +8,8 @@
 #define screen_size_y 800
 
 //maximum number of tiles game will load
-#define max_tiles_x 36  //12*3
-#define max_tiles_y 24  //8*3
+#define max_tiles_x 72  
+#define max_tiles_y 38  
 
 
 //tileSize

@@ -71,6 +71,7 @@ class GameLogic : public sf::Drawable{
                         bufCount++;
                     }
                 }
+
                 portCount++;
                 bool primary{false};
                 switch(checkConnectionMode()){
@@ -82,23 +83,23 @@ class GameLogic : public sf::Drawable{
                         break;
                 }
 
-                playerInstance.emplace_back(std::make_pair(new Player(sf::Vector2f(screen_size_x/2,screen_size_y/2+instanceOffset),1,true,window,++count,portCount,primary),
-                                                           new Player(sf::Vector2f(max_coords_x - screen_size_x/2,screen_size_y/2+instanceOffset),1,true,window,++count,portCount,!primary)));
+                playerInstance.emplace_back(std::make_pair(new Player(sf::Vector2f(screen_size_x/2,screen_size_y/2+instanceOffset),DefaultResources::player,true,window,++count,portCount,primary),
+                                                           new Player(sf::Vector2f(max_coords_x - screen_size_x/2,screen_size_y/2+instanceOffset),DefaultResources::enemy_player,true,window,++count,portCount,!primary)));
                 
                 switch(checkConnectionMode()){
                     case Mode::Host:
                       {
                         //playerInstance.back().second->cbind();
-                        playerInstance.back().first->sbind();
+                        playerInstance.back().first->sbind(true);
                         //std::cout << "ok" << std::endl;
                         break;
                       }
                     case Mode::Client:
                         //playerInstance.back().first->cbind();
-                        playerInstance.back().second->sbind();
+                        playerInstance.back().second->sbind(false);
                         break;
                         
-                }
+                } 
                 
                 
                 instanceOffset+=200;
@@ -177,15 +178,6 @@ class GameLogic : public sf::Drawable{
         
         void update(){
             for(auto& players:playerInstance){
-                switch(checkConnectionMode()){
-                    case Mode::Client:
-                        
-                        stringifiedPosition += std::to_string(players.second->getPosition().x) + std::string(",") + std::to_string(players.second->getPosition().y)+ std::string(" ");
-                        break;
-                    case Mode::Host:
-                        stringifiedPosition += std::to_string(players.first->getPosition().x) + std::string(",") + std::to_string(players.first->getPosition().y)+ std::string(" "); 
-                        break;
-                }
                 players.first->update();
                 players.second->update();
             }
@@ -196,10 +188,10 @@ class GameLogic : public sf::Drawable{
         
 
     private:
-        int portCount;
-        sf::TcpListener rSock; //receive socket
+        int portCount{0};
+        /* sf::TcpListener rSock; //receive socket
         sf::TcpSocket sSock; //send socket
-
+ */
         sf::IpAddress ip;
         unsigned short port;
 

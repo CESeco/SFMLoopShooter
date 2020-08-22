@@ -9,7 +9,7 @@
 #include "Configuration.hpp"
 #include <Entity/Configuration.hpp>
 #include <vector>
-
+#include <Resources/configuration.hpp>
 //have to call processTiles
 
 class TileMapView : public sf::Drawable{
@@ -23,8 +23,8 @@ class TileMapView : public sf::Drawable{
     private:
         friend class TileContainerView;
         bool loadTilesFromFiles();
-        void addEntities(int posX, int posY , Entities type);
-        char tiles[max_tiles_x][max_tiles_y];
+        void addEntities(int posX, int posY , DefaultResources type);
+        char tiles[max_tiles_y+1][max_tiles_x+1];
         
         std::string fileName;
         std::vector<std::shared_ptr<Entity>> entityList;
@@ -33,10 +33,6 @@ class TileMapView : public sf::Drawable{
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
             for(auto c : entityList){
-                //std::cout << c->getPosition().x << c->getPosition().y << std::endl;
-
-                //check for collision with player right here
-
                 target.draw(*c);
             }
         }

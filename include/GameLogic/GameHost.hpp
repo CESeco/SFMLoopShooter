@@ -39,6 +39,7 @@ class GameHost{
                      std::cout << cip << " " << cport << std::endl;
                      client.send(packet);
                      running = false;
+                     //client.disconnect();
                 }
 
             }

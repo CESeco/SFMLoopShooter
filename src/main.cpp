@@ -13,67 +13,93 @@
 #include <GameLogic/NetworkHandler.hpp>
 #include <GameLogic/GameHost.hpp>
 #include <SFML/Network.hpp>
+#include <Resources/configuration.hpp>
+#include <Views/SplashScreen.hpp>
+
 enum KeyCode{
     Top, Down ,Left ,Right
 };
 
+namespace gameResources{
+    void loadDefaultResources(){
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::game_icon,"assets/game_icon.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::player,"assets/player.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::bullet,"assets/bullet.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::enemy_player,"assets/enemy_player.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::regular_box,"assets/box.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::regular_box,"assets/box.png");  // b
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::big_box_horizontal,"assets/big_box_horizontal.png"); // h
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::big_box_vertical,"assets/big_box_vertical.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::container_horizontal,"assets/container_horizontal.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::container_vertical,"assets/container_vertical.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::sandbag_horizontal,"assets/sandbag_horizontal.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::sandbag_vertical,"assets/sandbag_vertical.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::tree,"assets/tree.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::bush,"assets/bush.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::stone_blue,"assets/stone_blue.png");
+        gameResources::ResourceHolder::get().texture.load(DefaultResources::stone_black,"assets/stone_black.png");
+
+        //fonts
+        gameResources::ResourceHolder::get().font.load(DefaultFont::comic,"assets/comic.ttf");
+        gameResources::ResourceHolder::get().font.load(DefaultFont::pixel,"assets/pixel.ttf");
+    
+        //gunshot 
+        gameResources::ResourceHolder::get().music.load(DefaultMusic::gunshot,"assets/gunShot.wav");
+    }
+
+};
+
 int main(){
-    
-    
-    sf::RectangleShape rect;
-    
-    gameResources::ResourceHolder::get().texture.load(1,"assets/sdds.png");
-    gameResources::ResourceHolder::get().texture.load(2,"assets/tree.png");
-    gameResources::ResourceHolder::get().texture.load(3,"assets/box.png");
-    gameResources::ResourceHolder::get().texture.load(4,"assets/bullet.png");
-
-   
-    
-  
-
-    NetworkInterface interface;
-    interface.call();  
+/*     NetworkInterface interface;
+    interface.call(); */  
    // Player player();
    /*  rect.setSize(sf::Vector2f(100,100));
     sf::Vector2f pos(100,100);
     rect.setPosition(pos); */
     /* std::cout << NetworkHandler::get().getIp().toString() << " " << NetworkHandler::get().getPort()  << std::endl; */
-    
- /*  NetworkHandler::get().setIp(sf::IpAddress("192.168.0.110"));
-                    NetworkHandler::get().setMode(Mode::Host);
+  
+  
+
+gameResources::loadDefaultResources();
+
+    NetworkHandler::get().setIp(sf::IpAddress("192.168.0.110"));
+                    NetworkHandler::get().setMode(Mode::Client);
                     NetworkHandler::get().setPort(12345);
-                    NetworkHandler::get().setLocalPort(15452); */
+                    NetworkHandler::get().setLocalPort(15452);  
 
- sf::RenderWindow window{sf::VideoMode(1200,800),"My window"};
- TileContainerView tile("assets/tile.txt",window);
-    /* ActionMap<int> keymap;
-    Action act(sf::Keyboard::S); */
-    
-   /*  
-    keymap.map(KeyCode::Top,Action(sf::Keyboard::W));
-    keymap.map(KeyCode::Down,Action(sf::Keyboard::S));
-    keymap.map(KeyCode::Right,Action(sf::Keyboard::D));
-    keymap.map(KeyCode::Left,Action(sf::Keyboard::A));
-    
-    ActionTarget<int> target(keymap);
-
-    target.bind(KeyCode::Down,[&pos](const sf::Event&){pos.y+=.1f;});
-    target.bind(KeyCode::Top,[&pos](const sf::Event&){pos.y-=.1f;});
-    target.bind(KeyCode::Left,[&pos](const sf::Event&){pos.x-=.1f;});
-    target.bind(KeyCode::Right,[&pos](const sf::Event&){pos.x+=.1f;}); */
+ sf::RenderWindow window{sf::VideoMode(1200,800),"SFMLoopshooter"};
+  TileContainerView tile("assets/tile.txt",window);
 
     
+    SplashScreen splashScreen(window);
 
      sf::Clock clock;
      sf::Time timeElapsed = sf::Time::Zero;
      
- 
+    
+
+    /*  std::shared_ptr<Button> button{new Button(sf::Vector2f(100,100),sf::Vector2f(500,100),DefaultFont::comic,window)};
+
+     button->setText(std::string{"This is test"},100,sf::Color::White);
+     button->setBackgroundColor(sf::Color::Green,sf::Color::Red);
+     button->addFunction([]()->void{std::cout << "this is test" << std::endl;}); */
+    
+    /* std::string data{""};
+    TextBox textBox(sf::Vector2f(100,400),sf::Vector2f(500,100),DefaultFont::comic,window,data);
+    Text text(sf::Vector2f(100,600),DefaultFont::pixel);
+    text.setText("This is also another test",30,sf::Color::Red); */
     while(window.isOpen()){
         sf::Event event;
         while(window.pollEvent(event)){
             if(event.type == sf::Event::Closed){
                 window.close();
             }
+           // splashScreen.processEvent(event);
+            /* button->processEvent(event,window);
+            textBox.processEvent(event,window);
+            if(data != ""){
+                std::cout << data << std::endl;
+            } */
         }
      /*    rect.setPosition(pos);
         target.processEvents(); */
@@ -86,11 +112,16 @@ int main(){
         repaint = true;
         timeElapsed -= secondPerFrame;
         tile.update();
-        //window.draw(rect);
+       
       } 
       if(repaint){
         window.clear(sf::Color::White);
-        window.draw(tile);
+
+        /* window.draw(*button);
+        window.draw(textBox);
+        window.draw(text); */
+         window.draw(tile);
+        //window.draw(splashScreen);
         window.display();
       }
 

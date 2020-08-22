@@ -1,5 +1,19 @@
 #include "Player.hpp"
+#ifdef _WIN32
+    #include <windows.h>
 
+    void sleep(unsigned milliseconds)
+    {
+        Sleep(milliseconds);
+    }
+#else
+    #include <unistd.h>
+
+    void sleep(int milliseconds)
+    {
+        usleep(milliseconds * 1000); // takes microseconds
+    }
+#endif
 ActionMap<int> Player::keymap;
 
 void Player::setDefaultMovements(){
@@ -17,9 +31,17 @@ void Player::setDefaultMovements(){
      
 } */
 
-void Player::sbind(){
+void Player::sbind(bool keepOnAsk){
+    sSocket.setBlocking(true); 
     std::cout << NetworkHandler::get().getIp().toString() << " " << NetworkHandler::get().getPort()+portCount << std::endl;
-    sSock.connect(NetworkHandler::get().getIp(),NetworkHandler::get().getPort()+portCount);
+    sf::Socket::Status status;
+    //if(keepOnAsk){
+        sleep(400);
+    //}
+    
+   status =  sSocket.connect(NetworkHandler::get().getIp(),NetworkHandler::get().getPort()+portCount);
+    
+    sSocket.setBlocking(false);
 }
 
 void Player::listenNetworkEvents(){
@@ -27,26 +49,37 @@ void Player::listenNetworkEvents(){
  sListener.listen(NetworkHandler::get().getLocalPort()+portCount);
  sf::TcpSocket sock;
  std::cout << "currently listening on " << NetworkHandler::get().getLocalPort()+portCount << std::endl;
- sListener.accept(sock);
  //sock.receive(packet);
+ sListener.accept(sock);
+ std::cout << "i am not getting it" << std::endl;
+
+ while(true){
  std::string type;
  double x{0},y{0};
- while(true){
      //std::cout <<"keeping true all the time " << std::endl;
  sf::Packet packet;
  if(sock.receive(packet) == sf::Socket::Done){
     packet >> type >> x >> y;
-    std::cout << type << " " << x << " " << y << std::endl;   
-    
+    networkEvent(type,x,y);
+    std::cout << type << " " << x << " " << y << std::endl; 
+    if(type == "projectile"){
+        projectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)),DefaultResources::player, true, 30.f, 10.f,sCount));
+        preservedProjectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)), DefaultResources::enemy_player, true, 30.f, 10.f,sCount));
+    }  
  }
-sListener.close();
+    
  }
 }
 
-
+void Player::networkEvent(std::string type,double x, double y){
+    if(type=="movement"){
+        setPosition(sf::Vector2f(x,y));
+    }
+}
 
 void Player::bind(){
     {   
+
         
         //std::cout << "bind call to player with count " << sCount << std::endl;
         std::string proj{"projectile"};
@@ -58,10 +91,11 @@ void Player::bind(){
         double b = position.y;
         sf::Packet packet;
         packet << movement << a << b;
-        sSock.send(packet);
+        sSocket.send(packet);
         
 
          });
+         
         eventTarget.bind(allowedMovement::right, [&](const sf::Event &) {position.x += .1f;
         direction=allowedMovement::right;
         std::string movement{"movement"};
@@ -69,7 +103,7 @@ void Player::bind(){
         double b = position.y;
         sf::Packet packet;
         packet << movement << a << b;
-        sSock.send(packet);
+        sSocket.send(packet);
         
          });
 
@@ -80,7 +114,7 @@ void Player::bind(){
         double b = position.y;
         sf::Packet packet;
         packet << movement << a << b;
-        sSock.send(packet);
+        sSocket.send(packet);
         
          });
         eventTarget.bind(allowedMovement::down, [&](const sf::Event &) {position.y += .1f;
@@ -90,7 +124,7 @@ void Player::bind(){
         double b = position.y;
         sf::Packet packet;
         packet << movement << a << b;
-        sSock.send(packet); 
+        sSocket.send(packet); 
         });
 
         eventTarget.bind(allowedMovement::fire, [&](const sf::Event &)  {
@@ -100,9 +134,18 @@ void Player::bind(){
             sf::Vector2f newPos{position.x+size.x/2,position.y+size.y/2};
             if (rateCount < 1)
             {
+                std::string str{"projectile"};
+                double a =  destPos.x;
+                double b = destPos.y;
+                sf::Packet packet;
+                packet << str << a << b;
+                sSocket.send(packet);
+
+                std::cout << "sent a packet of " << a << " and " << b << std::endl;
+
                 if(!eventTarget.isPlayMode()){
-                    projectile.emplace_back(new Projectile(newPos, window.mapPixelToCoords(destPos), 4, true, 30.f, 10.f,sCount));
-                    preservedProjectile.emplace_back(new Projectile(newPos, window.mapPixelToCoords(destPos), 4, true, 30.f, 10.f,sCount));
+                    projectile.emplace_back(new Projectile(newPos, window.mapPixelToCoords(destPos), DefaultResources::bullet, true, 30.f, 10.f,sCount));
+                    preservedProjectile.emplace_back(new Projectile(newPos, window.mapPixelToCoords(destPos), DefaultResources::bullet, true, 30.f, 10.f,sCount));
                 }else{
                     projectile.emplace_back(preservedProjectile.at(count));
                     count++;
