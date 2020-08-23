@@ -71,8 +71,8 @@ void Player::networkEvent(std::string type,double x, double y){
     if(type=="movement"){
         setPosition(sf::Vector2f(x,y));
     }else if(type == "projectile"){
-        projectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)),DefaultResources::player, true, 30.f, 10.f,sCount));
-        preservedProjectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)), DefaultResources::enemy_player, true, 30.f, 10.f,sCount));
+        projectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)),DefaultResources::bullet, true, 30.f, 10.f,sCount));
+        preservedProjectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)), DefaultResources::bullet, true, 30.f, 10.f,sCount));
     }
 }
 
