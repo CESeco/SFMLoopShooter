@@ -10,7 +10,7 @@
 #include "Configuration.hpp"
 #include "NetworkHandler.hpp"
 #include <SFML/Network.hpp>
-
+#include <GUI/Text.hpp>
 
 //if focus instance dies, either add new instance or if all instance are already added
 // stop the game
@@ -19,7 +19,8 @@
 class GameLogic : public sf::Drawable{
     public: 
     
-        GameLogic(sf::RenderWindow& window):window(window){
+        GameLogic(sf::RenderWindow& window):window(window),
+        gameOverText(sf::Vector2f(300,500),DefaultFont::pixel){
             Player::setDefaultMovements();
             addPlayerInstance();
             
@@ -125,7 +126,17 @@ class GameLogic : public sf::Drawable{
         }
 
         void checkForGameOver(){
-            if(!getPrimaryPlayer().isRendering() or !getSecondaryPlayer().isRendering()){
+            if(!getPrimaryPlayer().isRendering()){ 
+                if(availableInstance == maxInstance){
+                    gameOverText.setPosition(getSecondaryPlayer().getPosition());
+                    gameOverText.setText(std::string{"You lose"},75,sf::Color::Red);
+                }
+                addPlayerInstance();
+            }else if(!getSecondaryPlayer().isRendering()){
+                if(availableInstance == maxInstance){
+                    gameOverText.setPosition(getPrimaryPlayer().getPosition());
+                    gameOverText.setText(std::string{"You win"},75,sf::Color::Red);
+                }
                 addPlayerInstance();
             }
             
@@ -191,7 +202,8 @@ class GameLogic : public sf::Drawable{
         int portCount{0};
         /* sf::TcpListener rSock; //receive socket
         sf::TcpSocket sSock; //send socket
- */
+ */     
+        Text gameOverText;
         sf::IpAddress ip;
         unsigned short port;
 
@@ -212,6 +224,8 @@ class GameLogic : public sf::Drawable{
                target.draw(*playerPair.first);
                target.draw(*playerPair.second);
            }
+           target.draw(gameOverText);
+
         }
 
 

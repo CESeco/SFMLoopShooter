@@ -34,9 +34,8 @@ class TileContainerView: public sf::Drawable {
         } */
         
            
-            fixCollision(gamePlayers.getPrimaryPlayer());
-
-            fixCollision(gamePlayers.getSecondaryPlayer());
+            fixCollision(gamePlayers.getPrimaryPlayer(),event);
+            fixCollision(gamePlayers.getSecondaryPlayer(),event);
             //fixCollision(*player.second);
             sf::Vector2f prevPos{gamePlayers.getPrimaryPlayerPosition()};
             Player& player = gamePlayers.getPrimaryPlayer();
@@ -72,9 +71,15 @@ class TileContainerView: public sf::Drawable {
                 //std::cout << "ok " << std::endl;
                 for(auto i{gamePlayers.playerInstance.begin()};i<gamePlayers.playerInstance.end()-1;i++){
                     if(gamePlayers.checkConnectionMode() == Mode::Client){
+                        sf::Vector2f previousPosition = (*i).second->getPosition();
+                    if(toMoveApproximate(previousPosition))
+                        //std::cout << "move is set to true" << std::endl;
                         (*i).second->processEvent();
                         //(*i).first->listenNetworkEvents();
                     }else{
+                    
+                        sf::Vector2f previousPosition = (*i).first->getPosition();
+                    if(toMoveApproximate(previousPosition))
                         (*i).first->processEvent();
                         //(*i).second->listenNetworkEvents();
                     }
@@ -99,14 +104,23 @@ class TileContainerView: public sf::Drawable {
             sf::RectangleShape rect(sf::Vector2f(0,0));
         }
 
-        bool fixCollision(Player& player){
+        bool fixCollision(Player& player,sf::Event event){
             gamePlayers.checkKill();
             gamePlayers.checkForGameOver();
             for(auto& entity: view.entityList){
                 checkProjectileCollision(player,entity);
                 if(entity->collides(player.getBounds())){
-                    player.reverseDirection();
+                    player.noEvent = true;
+                    player.noEventCount = 0;
+                    player.reverseDirection(event);
                     return true;
+                }else{
+                    if(player.noEvent = true and player.noEventCount < 60)
+                    {
+                        player.noEventCount++;   
+                    }else if(player.noEventCount >=60){
+                        player.noEvent = false;
+                    }
                 }
             }
         return true;
@@ -121,6 +135,16 @@ class TileContainerView: public sf::Drawable {
           }
         return false;          
         }
+
+         bool toMoveApproximate(sf::Vector2f position){
+          float windowHW = screen_size_x/2;  //window half width
+          float windowHH = screen_size_y/2; //window half height
+
+          if(position.x >= 0 and position.y >= 0  and position.x <= max_coords_x and position.y <= max_coords_y){
+            return true;
+          }
+            return false;
+          }
 
 
         void update(){

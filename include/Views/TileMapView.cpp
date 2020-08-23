@@ -25,12 +25,12 @@ bool TileMapView::loadTilesFromFiles(){
                 j++;
                 continue;
             } */
-            std::cout << singleTile;
+            //std::cout << singleTile;
             tiles[i][j] = singleTile;
             //std::cout << tiles[i][j] << "(" << i<< "," <<j <<")" << " ";
             j++;
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
         i++;
         }  
 
@@ -47,11 +47,11 @@ bool TileMapView::processTiles(){
                 case '0':
                     break;
                 case 'z':
-                std::cout << "found regular box" << std::endl;
+                //std::cout << "found regular box" << std::endl;
                     addEntities((j)*tile_size_x,(i)*tile_size_y,DefaultResources::regular_box);
                     break;
                 case 't':
-                    std::cout << "found a tree " << std::endl;
+                   // std::cout << "found a tree " << std::endl;
                     addEntities((j)*tile_size_x,(i)*tile_size_y,DefaultResources::tree);;
                     break;
                 case 'r':

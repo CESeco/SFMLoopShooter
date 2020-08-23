@@ -56,7 +56,7 @@ class GameHost : public sf::Drawable{
             while(running){
                 
                 if(listener.accept(client) == sf::Socket::Done){
-                     std::cout << " New client connected " << std::endl;
+                    // std::cout << " New client connected " << std::endl;
                      cip = client.getRemoteAddress();
                      cport = client.getRemotePort();
                      std::cout << cip << " " << cport << std::endl;

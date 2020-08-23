@@ -33,7 +33,7 @@ void Player::setDefaultMovements(){
 
 void Player::sbind(bool keepOnAsk){
     sSocket.setBlocking(true); 
-    std::cout << NetworkHandler::get().getIp().toString() << " " << NetworkHandler::get().getPort()+portCount << std::endl;
+   // std::cout << NetworkHandler::get().getIp().toString() << " " << NetworkHandler::get().getPort()+portCount << std::endl;
     sf::Socket::Status status;
     //if(keepOnAsk){
         sleep(400);
@@ -51,7 +51,7 @@ void Player::listenNetworkEvents(){
  //std::cout << "currently listening on " << NetworkHandler::get().getLocalPort()+portCount << std::endl;
  //sock.receive(packet);
  sListener.accept(sock);
- std::cout << "i am not getting it" << std::endl;
+ //std::cout << "i am not getting it" << std::endl;
 
  while(true){
  std::string type;
@@ -172,12 +172,7 @@ void Player::setPosition(sf::Vector2f pos){
 sf::Vector2f Player::getPosition(){
     return position;
 }
-void Player::setHealth(float health){
-    this->health = health;
-}
-float Player::getHealth(){
-    return health;
-}
+
 void Player::update(){
     if(allowRendering){
     sprite.setPosition(position);
@@ -215,7 +210,7 @@ bool Player::contains(sf::Vector2f pos){
     return sprite.getGlobalBounds().contains(pos);
 }
 
-void Player::reverseDirection(){
+void Player::reverseDirection(sf::Event event){
    //setPosition(sf::Vector2f(601,401));
     //eventTarget.setPlayMode();
     
@@ -225,8 +220,12 @@ void Player::reverseDirection(){
         position.x += velocity;
     }else if(direction == allowedMovement::top){
         position.y += velocity;
-    }else{
+    }else if(direction == allowedMovement::down){
         position.y -= velocity;
     }
+
+    
+
+    
     
 }

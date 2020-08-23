@@ -100,7 +100,7 @@ gameResources::loadDefaultResources();
 sf::RenderWindow window{sf::VideoMode(1200,800),"SFMLoopshooter"};
 
 loadSplashScreen(window);
-std::cout << " i am here officially " << std::endl;
+//std::cout << " i am here officially " << std::endl;
 TileContainerView tile("assets/tile.txt",window);
 sf::Clock clock;
 sf::Time timeElapsed = sf::Time::Zero;

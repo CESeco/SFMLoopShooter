@@ -13,9 +13,8 @@
 
 class Player : public Entity
 {
-    //constructor
 public:
-   
+    //Note that collide Response has no effect whatsoever to gamePlay . Refactor required
     
     Player(sf::Vector2f pos, const DefaultResources resourceId, bool collideResponse, sf::RenderWindow& window,int sCount,int portCount,bool primary)
         : Entity(pos, resourceId, collideResponse),window(window),eventTarget(keymap),sCount(sCount),portCount(portCount),dataReceiver(&Player::listenNetworkEvents,this)
@@ -23,13 +22,19 @@ public:
     {
         
         sprite.setTexture(gameResources::ResourceHolder::get().texture.get(resourceId));
+       
+       //get the default size of image we just loaded
         size.x = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().x;
         size.y = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().y;
         sprite.setTextureRect(sf::IntRect(0, 0, size.x, size.y));
         sprite.setPosition(position);
-        //sSock.setBlocking(false);
-        //sListener.setBlocking(false);
+       
         
+        /* There are two players one is primary and another is secondary.
+        one which player is controlling is primary 
+        and player controlled by another user over 
+        another pc is secondary
+        secondary player should receive data from over the internet */
         if(!primary)
             dataReceiver.launch();
         
@@ -37,11 +42,16 @@ public:
         
     }
         
-
+     /* sbind is related to server binding.
+     upon activation the player instance will be able to send packets  */
      void sbind(bool keepOnAsk);
-     //void cbind();
+     
+    /* networkEvent is called when we receive something from our peer player
+    over the network */
+    void networkEvent(std::string type,double a, double b);
+
+
     
-     void networkEvent(std::string type,double a, double b);
     enum allowedMovement
     {
         left,
@@ -51,25 +61,34 @@ public:
         fire
     };
 
+    /* Bind function will bind the id of allowedMovement 
+    and a lambda function that is triggered when 
+    the event relating to id of allowed movement is fired. */
     void bind();
+    
+    //when collision takes place, revert the direction of player
+    //to its original position
+    void reverseDirection(sf::Event event);
 
-    void reverseDirection();
-
+    //map unique id and events together
     static void setDefaultMovements();
-    void processEvent();
-    void update();
 
+
+    void processEvent();
+
+    void update();
+    
     void setPosition(sf::Vector2f position) override;
+    
     sf::Vector2f getPosition() override;
 
     void setSize(sf::Vector2f size) override;
+   
     sf::Vector2f getSize() override;
 
     bool collides(sf::FloatRect rect) override;
+   
     bool contains(sf::Vector2f pos) override;
-
-    void setHealth(float healthVal);
-    float getHealth();
 
     float getVelocity();
 
@@ -105,6 +124,8 @@ public:
     std::vector<std::shared_ptr<Projectile>> projectile;
     std::vector<std::shared_ptr<Projectile>> preservedProjectile;
     int count{0};
+    bool noEvent{false};
+    int  noEventCount{0};
 protected:
     float health{100};
     float velocity{.1f};
@@ -115,6 +136,7 @@ protected:
     
 
 private:
+
     sf::TcpSocket sSocket;
     int portCount;
     bool allowRendering{true};
@@ -122,6 +144,11 @@ private:
     sf::Clock rateFireCountClock;
     sf::RenderWindow& window;
     sf::Thread dataReceiver;
+
+    
+
+    bool stopProcessing{false};
+
     void draw(sf::RenderTarget &target, sf::RenderStates) const
     {
        if(allowRendering){

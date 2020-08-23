@@ -8,7 +8,7 @@ public:
 Projectile(sf::Vector2f pos,sf::Vector2f destination, const DefaultResources resourceId,bool collideResponse,float velocity , float damage, int sCount)
     :Entity(pos,resourceId,collideResponse),destination(destination),velocity(velocity),damage(damage),sCount(sCount)
     {
-        std::cout << "new projectile Created with " << pos.x << " " << pos.y << " with a destination of " << destination.x << " " << destination.y << std::endl;
+        //std::cout << "new projectile Created with " << pos.x << " " << pos.y << " with a destination of " << destination.x << " " << destination.y << std::endl;
         sprite.setTexture(gameResources::ResourceHolder::get().texture.get(resourceId));
         size.x = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().x;
         size.y = gameResources::ResourceHolder::get().texture.get(resourceId).getSize().y;

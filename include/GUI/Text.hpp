@@ -20,6 +20,9 @@ class Text : public sf::Drawable{
         void Emphasis(){
             text.setStyle(sf::Text::Bold | sf::Text::Underlined);
         }
+        void setPosition(sf::Vector2f position){
+            position = position;
+        }
 
     private:
         sf::Text text;

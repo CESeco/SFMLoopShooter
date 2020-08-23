@@ -49,7 +49,7 @@ class GameClient : public sf::Drawable{
             NetworkHandler::get().setLocalPort(getLocalPort());
             NetworkHandler::get().setConnected();
             socket.disconnect();
-            std::cout << "stuff done here" << std::endl;
+            //std::cout << "stuff done here" << std::endl;
             }
 
         sf::IpAddress getIp(){
