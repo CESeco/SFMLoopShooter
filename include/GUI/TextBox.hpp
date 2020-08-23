@@ -11,6 +11,9 @@ class TextBox : public Widget{
         void setPosition(const sf::Vector2f& pos) override;
 
         sf::Vector2f getSize() const;
+        void setColor(sf::Color boxColor, sf::Color textColor);
+        void setCharacterSize(int size);
+        
     private:
         void handleClick(sf::Event e, const sf::RenderWindow& window);
         void handleTextInput(sf::Event e);

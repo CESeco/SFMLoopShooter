@@ -48,7 +48,7 @@ void Player::listenNetworkEvents(){
  //std::cout << "i am working " << std::endl;
  sListener.listen(NetworkHandler::get().getLocalPort()+portCount);
  sf::TcpSocket sock;
- std::cout << "currently listening on " << NetworkHandler::get().getLocalPort()+portCount << std::endl;
+ //std::cout << "currently listening on " << NetworkHandler::get().getLocalPort()+portCount << std::endl;
  //sock.receive(packet);
  sListener.accept(sock);
  std::cout << "i am not getting it" << std::endl;
@@ -61,11 +61,7 @@ void Player::listenNetworkEvents(){
  if(sock.receive(packet) == sf::Socket::Done){
     packet >> type >> x >> y;
     networkEvent(type,x,y);
-    std::cout << type << " " << x << " " << y << std::endl; 
-    if(type == "projectile"){
-        projectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)),DefaultResources::player, true, 30.f, 10.f,sCount));
-        preservedProjectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)), DefaultResources::enemy_player, true, 30.f, 10.f,sCount));
-    }  
+    //std::cout << type << " " << x << " " << y << std::endl; 
  }
     
  }
@@ -74,6 +70,9 @@ void Player::listenNetworkEvents(){
 void Player::networkEvent(std::string type,double x, double y){
     if(type=="movement"){
         setPosition(sf::Vector2f(x,y));
+    }else if(type == "projectile"){
+        projectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)),DefaultResources::player, true, 30.f, 10.f,sCount));
+        preservedProjectile.emplace_back(new Projectile(sf::Vector2f(position.x+size.x/2,position.y+size.y/2),window.mapPixelToCoords(sf::Vector2i((int)x,(int)y)), DefaultResources::enemy_player, true, 30.f, 10.f,sCount));
     }
 }
 
@@ -86,14 +85,12 @@ void Player::bind(){
         
         eventTarget.bind(allowedMovement::left, [&](const sf::Event &) {position.x -= .1f;
         direction=allowedMovement::left;
-         std::string movement{"movement"};
+        std::string movement{"movement"};
         double a =  position.x;
         double b = position.y;
         sf::Packet packet;
         packet << movement << a << b;
         sSocket.send(packet);
-        
-
          });
          
         eventTarget.bind(allowedMovement::right, [&](const sf::Event &) {position.x += .1f;
@@ -104,12 +101,11 @@ void Player::bind(){
         sf::Packet packet;
         packet << movement << a << b;
         sSocket.send(packet);
-        
          });
 
         eventTarget.bind(allowedMovement::top, [&](const sf::Event &) {position.y -= .1f;
         direction=allowedMovement::top;
-         std::string movement{"movement"};
+        std::string movement{"movement"};
         double a =  position.x;
         double b = position.y;
         sf::Packet packet;
@@ -117,6 +113,7 @@ void Player::bind(){
         sSocket.send(packet);
         
          });
+
         eventTarget.bind(allowedMovement::down, [&](const sf::Event &) {position.y += .1f;
         direction=allowedMovement::down;
         std::string movement{"movement"};
@@ -141,7 +138,7 @@ void Player::bind(){
                 packet << str << a << b;
                 sSocket.send(packet);
 
-                std::cout << "sent a packet of " << a << " and " << b << std::endl;
+                //std::cout << "sent a packet of " << a << " and " << b << std::endl;
 
                 if(!eventTarget.isPlayMode()){
                     projectile.emplace_back(new Projectile(newPos, window.mapPixelToCoords(destPos), DefaultResources::bullet, true, 30.f, 10.f,sCount));

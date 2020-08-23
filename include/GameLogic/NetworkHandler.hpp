@@ -42,8 +42,15 @@ class NetworkHandler{
         unsigned short getLocalPort() const{
             return localPort;
         }
-        sf::UdpSocket socket;
+        void setConnected(){
+            connected = true;
+        }
+        bool isConnected(){
+            return connected;
+        }
+        //sf::UdpSocket socket;
     private:
+       bool connected{false};
        Mode mode; 
        unsigned short port;
        unsigned short localPort;

@@ -48,61 +48,71 @@ namespace gameResources{
     }
 
 };
+void loadSplashScreen(sf::RenderWindow& window){
+     
+     SplashScreen splashScreen(window);
+     sf::Clock clock;
+     sf::Time timeElapsed = sf::Time::Zero;
 
+    while(!NetworkHandler::get().isConnected()){
+        sf::Event event;
+        while(window.pollEvent(event)){
+            if(event.type == sf::Event::Closed){
+                window.close();
+            }
+            if(NetworkHandler::get().isConnected()){
+             return;
+            }
+           splashScreen.processEvent(event);
+        }
+      //std::cout <<  "checking my presence here " << NetworkHandler::get().isConnected() <<std::endl;
+      
+      bool repaint = false;
+      sf::Time secondPerFrame = sf::seconds(1/60.f);
+      timeElapsed += clock.restart();
+      
+      //tile.processEvents(event);
+      while(timeElapsed > secondPerFrame){
+        repaint = true;
+        timeElapsed -= secondPerFrame;
+        // tile.update();
+       
+      } 
+      if(repaint){
+        window.clear(sf::Color::White);
+        //window.draw(tile);
+        window.draw(splashScreen);
+        window.display();
+      }
+
+    }
+}
 int main(){
-/*     NetworkInterface interface;
-    interface.call(); */  
-   // Player player();
-   /*  rect.setSize(sf::Vector2f(100,100));
-    sf::Vector2f pos(100,100);
-    rect.setPosition(pos); */
-    /* std::cout << NetworkHandler::get().getIp().toString() << " " << NetworkHandler::get().getPort()  << std::endl; */
-  
-  
 
 gameResources::loadDefaultResources();
 
+/* 
     NetworkHandler::get().setIp(sf::IpAddress("192.168.0.110"));
                     NetworkHandler::get().setMode(Mode::Client);
                     NetworkHandler::get().setPort(12345);
-                    NetworkHandler::get().setLocalPort(15452);  
+                    NetworkHandler::get().setLocalPort(15452);  */ 
 
- sf::RenderWindow window{sf::VideoMode(1200,800),"SFMLoopshooter"};
-  TileContainerView tile("assets/tile.txt",window);
+sf::RenderWindow window{sf::VideoMode(1200,800),"SFMLoopshooter"};
 
-    
-    SplashScreen splashScreen(window);
+loadSplashScreen(window);
+std::cout << " i am here officially " << std::endl;
+TileContainerView tile("assets/tile.txt",window);
+sf::Clock clock;
+sf::Time timeElapsed = sf::Time::Zero;
 
-     sf::Clock clock;
-     sf::Time timeElapsed = sf::Time::Zero;
-     
-    
-
-    /*  std::shared_ptr<Button> button{new Button(sf::Vector2f(100,100),sf::Vector2f(500,100),DefaultFont::comic,window)};
-
-     button->setText(std::string{"This is test"},100,sf::Color::White);
-     button->setBackgroundColor(sf::Color::Green,sf::Color::Red);
-     button->addFunction([]()->void{std::cout << "this is test" << std::endl;}); */
-    
-    /* std::string data{""};
-    TextBox textBox(sf::Vector2f(100,400),sf::Vector2f(500,100),DefaultFont::comic,window,data);
-    Text text(sf::Vector2f(100,600),DefaultFont::pixel);
-    text.setText("This is also another test",30,sf::Color::Red); */
     while(window.isOpen()){
         sf::Event event;
         while(window.pollEvent(event)){
             if(event.type == sf::Event::Closed){
                 window.close();
             }
-           // splashScreen.processEvent(event);
-            /* button->processEvent(event,window);
-            textBox.processEvent(event,window);
-            if(data != ""){
-                std::cout << data << std::endl;
-            } */
         }
-     /*    rect.setPosition(pos);
-        target.processEvents(); */
+   
       bool repaint = false;
       sf::Time secondPerFrame = sf::seconds(1/60.f);
       timeElapsed += clock.restart();
@@ -116,12 +126,7 @@ gameResources::loadDefaultResources();
       } 
       if(repaint){
         window.clear(sf::Color::White);
-
-        /* window.draw(*button);
-        window.draw(textBox);
-        window.draw(text); */
-         window.draw(tile);
-        //window.draw(splashScreen);
+        window.draw(tile);
         window.display();
       }
 

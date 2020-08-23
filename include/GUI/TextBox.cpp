@@ -15,6 +15,14 @@ textString(str)
     text.setFillColor(sf::Color::White);
 }
 
+void TextBox::setColor(sf::Color boxColor, sf::Color textColor){
+    rectangle.setFillColor(boxColor);
+    text.setFillColor(textColor);
+}
+
+void TextBox::setCharacterSize(int size){
+    text.setCharacterSize(50);
+}
 sf::Vector2f TextBox::getSize() const{
     return size;
 }
