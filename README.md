@@ -12,6 +12,9 @@ The concept is based upon this [video](https://www.youtube.com/watch?v=CBawCe6du
 ![ServerClientChooseScreen](https://i.imgur.com/LYSSkfa.png)
 ![gameplay](https://i.imgur.com/vj8dr9M.png)
 
+## Direct Download 
+You can look at wiki and download from there
+
 ## To build from source 
 
 ### Requirements
