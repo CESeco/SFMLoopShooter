@@ -50,7 +50,9 @@ If you are on windows then, CMake may not find path to sfml directory; you may e
         
  or use CMake GUI. everything seems easier there. 
  
- After generating the build files you can run respective makefiles and generate the executable.
+ After generating the build files you can run respective makefiles and generate the executable. 
+ After generating executable, if you are on windows you need to copy dll files from ``` YourSFMLDirectory\bin ``` to the executable folder.
+
  
 
 
