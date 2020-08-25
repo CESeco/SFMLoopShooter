@@ -14,6 +14,13 @@ The concept is based upon this [video](https://www.youtube.com/watch?v=CBawCe6du
 
 ## Direct Download 
 You can look at wiki and download from there
+For windows it is straight forward.  
+
+If you are on linux then you have to install SFML first using your package manager and you are good to run the program.
+There is a script file for debian based operating system that will fulfill the dependencies automatically so if you are on debian just run ```run.sh``` file
+    
+        chmod +x run.sh
+        ./run.sh
 
 ## To build from source 
 
