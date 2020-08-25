@@ -3,7 +3,7 @@
 function(add_lib_and_include_directories LibName)
 add_library(${LibName} ${ARGN})
 target_include_directories(${LibName} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_link_libraries(${libName} ${SFML_libs})
+#target_link_libraries(${libName} ${SFML_libs})
 get_property(temp GLOBAL PROPERTY game_libs_list)
 set_property(GLOBAL PROPERTY game_libs_list "${temp}" "${LibName}")
 endfunction()

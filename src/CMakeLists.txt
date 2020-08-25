@@ -8,4 +8,4 @@ message(STATUS ${libslist})
 message("test")
 target_link_libraries(SFMLoopShooter ${SFML_libs} ${libslist} pthread)
 
-add_custom_command(TARGET SFMLoopShooter POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets/ $<TARGET_FILE_DIR:SFMLoopShooter>)
+add_custom_command(TARGET SFMLoopShooter POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets/ $<TARGET_FILE_DIR:SFMLoopShooter>/assets/)
